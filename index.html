@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Choice Manager</title>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 20px;
+    }
+    select, button {
+      margin: 5px;
+      padding: 5px;
+    }
+    .item {
+      margin: 5px 0;
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Select Choices</h2>
+  <select id="placeSelect"></select>
+  <select id="branchSelect"></select>
+  <button onclick="addChoice()">Add</button>
+  <button id="storeDataBtn" onclick="storeData()">SAVE CHOICES</button>
+
+  <h2>Selected Choices</h2>
+  <div id="pListContainer"></div>
+
+  <script>
+
+/*
+let tempdata = {
+      choices: {
+        Rourkela: ["CSE", "Chemical", "BioMed"],
+        Durgapur: ["CSE", "ECE", "EE", "Meta"]
+      },
+      pList: []
+    }; */
+    
+    let data;
+    let choices;
+    let pList;
+
+    const placeSelect = document.getElementById("placeSelect");
+    const branchSelect = document.getElementById("branchSelect");
+    const pListContainer = document.getElementById("pListContainer");
+
+    const storeDataBtn = document.getElementById("storeDataBtn")
+
+    function populatePlaceDropdown() {
+      placeSelect.innerHTML = "";
+      for (const place in choices) {
+        if (choices[place].length > 0) {
+          const option = document.createElement("option");
+          option.value = place;
+          option.textContent = place;
+          placeSelect.appendChild(option);
+        }
+      }
+      populateBranchDropdown();
+    }
+
+    function populateBranchDropdown() {
+      branchSelect.innerHTML = "";
+      const selectedPlace = placeSelect.value;
+      if (!selectedPlace) return;
+      choices[selectedPlace].forEach(branch => {
+        const option = document.createElement("option");
+        option.value = branch;
+        option.textContent = branch;
+        branchSelect.appendChild(option);
+      });
+    }
+
+    placeSelect.addEventListener("change", populateBranchDropdown);
+
+    function addChoice() {
+      const place = placeSelect.value;
+      const branch = branchSelect.value;
+      if (!place || !branch) return;
+
+      const key = `${place}-${branch}`;
+      pList.push(key);
+
+      // Remove from choices
+      const index = choices[place].indexOf(branch);
+      if (index > -1) choices[place].splice(index, 1);
+
+      render();
+    }
+
+    function removeChoice(index) {
+      const [place, branch] = pList[index].split("-");
+      choices[place].push(branch);
+      pList.splice(index, 1);
+      render();
+    }
+
+    function moveUp(index) {
+      if (index === 0) return;
+      [pList[index - 1], pList[index]] = [pList[index], pList[index - 1]];
+      render();
+    }
+
+    function moveDown(index) {
+      if (index === pList.length - 1) return;
+      [pList[index + 1], pList[index]] = [pList[index], pList[index + 1]];
+      render();
+    }
+
+    function render() {
+      populatePlaceDropdown();
+
+      pListContainer.innerHTML = "";
+      pList.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.textContent = index+1 +" "+item;
+
+        const upBtn = document.createElement("button");
+        upBtn.textContent = "↑";
+        upBtn.onclick = () => moveUp(index);
+
+        const downBtn = document.createElement("button");
+        downBtn.textContent = "↓";
+        downBtn.onclick = () => moveDown(index);
+
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "Delete";
+        delBtn.onclick = () => removeChoice(index);
+
+        div.appendChild(upBtn);
+        div.appendChild(downBtn);
+        div.appendChild(delBtn);
+
+        pListContainer.appendChild(div);
+      });
+    }
+
+    async function storeData() {
+        storeDataBtn.innerHTML = "Saving..."
+        storeDataBtn.disabled = true;
+      const response = await fetch("https://smith-csab-choice-fill-temp-f2bb.instproasmith.workers.dev/store", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+      const text = await response.text();
+      //document.getElementById("output").textContent = text;
+      alert(text)
+      storeDataBtn.innerHTML = "SAVE CHOICES"
+        storeDataBtn.disabled = false;
+    }
+
+    async function getData() {
+        pListContainer.innerHTML = "Loading..."
+      const response = await fetch("https://smith-csab-choice-fill-temp-f2bb.instproasmith.workers.dev/get");
+      const json = await response.json();
+      data = json
+        choices = data.choices
+        pList = data.pList
+        render();
+      //document.getElementById("output").textContent = JSON.stringify(json, null, 2);
+    }
+
+    // Initialize
+    getData()
+    
+  </script>
+
+</body>
+</html>

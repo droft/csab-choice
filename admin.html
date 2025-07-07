@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Admin-Choice Manager</title>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 20px;
+    }
+    </style>
+  </head>
+  <body>
+
+    <button id="storeDataBtn" onclick="storeData()">Store Data</button>
+  
+    <pre id="output" contenteditable="true"></pre>
+
+    <script>
+        let data;
+        const storeDataBtn = document.getElementById("storeDataBtn")
+        getData()
+    async function storeData() {
+        storeDataBtn.innerHTML = "Saving..."
+        storeDataBtn.disabled = true;
+      const response = await fetch("https://smith-csab-choice-fill-temp-f2bb.instproasmith.workers.dev/store", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: document.getElementById("output").textContent
+      });
+      const text = await response.text();
+       alert(text)
+       storeDataBtn.innerHTML = "Store Data"
+        storeDataBtn.disabled = false;
+    }
+
+    async function getData() {
+        document.getElementById("output").textContent = "Loading..."
+      const response = await fetch("https://smith-csab-choice-fill-temp-f2bb.instproasmith.workers.dev/get");
+      const json = await response.json();
+      data = json
+      document.getElementById("output").textContent = JSON.stringify(json, null, 2);
+    }
+    </script>
+  </body>
+  </html>
