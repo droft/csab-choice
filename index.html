@@ -12,7 +12,7 @@
     select, button {
       margin: 5px;
       padding: 5px;
-      display:block;
+    
     }
     .item {
       margin: 5px 0;
@@ -21,9 +21,7 @@
       align-items: center;
       border-bottom:1px solid #000;
     }
-    .rendered-btn{
-      display:inline;
-    }
+    
   </style>
 </head>
 <body>
@@ -132,7 +130,7 @@ let tempdata = {
         const upBtn = document.createElement("button");
         upBtn.textContent = "↑";
         upBtn.onclick = () => moveUp(index);
-        upBtn.className = "rendered-btn";
+    
 
         const downBtn = document.createElement("button");
         downBtn.textContent = "↓";
