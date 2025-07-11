@@ -12,12 +12,14 @@
     select, button {
       margin: 5px;
       padding: 5px;
+      display:block
     }
     .item {
       margin: 5px 0;
       display: flex;
       gap: 5px;
       align-items: center;
+      border-bottom:1px solid #000;
     }
   </style>
 </head>
@@ -135,14 +137,13 @@ let tempdata = {
         delBtn.textContent = "Delete";
         delBtn.onclick = () => removeChoice(index);
 
-        let br = document.createElement("BR");
-        let hr = document.createElement("HR");
         
-        div.appendChild(br);
+        
+        
         div.appendChild(upBtn);
         div.appendChild(downBtn);
         div.appendChild(delBtn);
-        div.appendChild(hr);
+        
 
         pListContainer.appendChild(div);
       });
