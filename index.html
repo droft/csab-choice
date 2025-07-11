@@ -135,9 +135,14 @@ let tempdata = {
         delBtn.textContent = "Delete";
         delBtn.onclick = () => removeChoice(index);
 
+        const br = document.createElement("br")
+        const hr = document.createElement("hr")
+        
+        div.appendChild(br)
         div.appendChild(upBtn);
         div.appendChild(downBtn);
         div.appendChild(delBtn);
+        div.appendChild(hr)
 
         pListContainer.appendChild(div);
       });
