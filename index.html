@@ -128,6 +128,9 @@ let tempdata = {
         div.className = "item";
         div.textContent = index+1 +" "+item;
 
+        const p = document.createElement("p");
+        p.textContent = index+1 +" "+item;
+
         const upBtn = document.createElement("button");
         upBtn.textContent = "↑";
         upBtn.onclick = () => moveUp(index);
@@ -143,7 +146,7 @@ let tempdata = {
 
         
         
-        
+        div.appendChild(p);
         div.appendChild(upBtn);
         div.appendChild(downBtn);
         div.appendChild(delBtn);
