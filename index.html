@@ -21,6 +21,9 @@
       align-items: center;
       border-bottom:1px solid #000;
     }
+    .rendered-btn{
+      display:block
+    }
   </style>
 </head>
 <body>
@@ -128,6 +131,7 @@ let tempdata = {
         const upBtn = document.createElement("button");
         upBtn.textContent = "↑";
         upBtn.onclick = () => moveUp(index);
+        upBtn.className = "rendered-btn";
 
         const downBtn = document.createElement("button");
         downBtn.textContent = "↓";
