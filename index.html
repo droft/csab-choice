@@ -123,6 +123,7 @@ let tempdata = {
       pListContainer.innerHTML = "";
       pList.forEach((item, index) => {
         const div = document.createElement("div");
+        div.className = "item";
 
         const p = document.createElement("p");
         p.textContent = index+1 +" "+item;
